@@ -3,7 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-
+const morgan= require("morgan")
 
 const app = express();
 
@@ -33,7 +33,10 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
-
+app.use(morgan("dev"))
+app.use(cors({
+    origin: '*'
+}))
 
 
 const options = {
