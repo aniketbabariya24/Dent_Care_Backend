@@ -1,12 +1,12 @@
+// --------------->>>>>>>> Internal Modules <<<<<<<<-------------------
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-const morgan= require("morgan")
 
 const app = express();
-
 
 
 require("dotenv").config();
@@ -17,15 +17,13 @@ const { dbconnetion } = require("./configs/db");
 const { logsData } = require("./middlewares/log.middleware");
 const { userRouter } = require("./routes/user.route");
 const { adminRouter } = require("./routes/admin.router");
-const {serviceRouter}= require("./routes/service.route");
-const {appointmentRouter}= require("./routes/appointment.route");
-const {doctorRouter}= require("./routes/doctor.route");
+const { serviceRouter }= require("./routes/service.route");
+const { appointmentRouter }= require("./routes/appointment.route");
+const { doctorRouter }= require("./routes/doctor.route");
 const { authenticate } = require("./middlewares/authentication");
 const { GntRouter } = require("./routes/generateNewToken.route");
 const { LogoutRouter } = require("./routes/logout.route");
 const { feedbackRouter } = require("./routes/feedbackForm.route");
-
-
 
 
 // --------------->>>>>>>> Middlewares <<<<<<<<-------------------
@@ -33,12 +31,8 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(morgan("dev"))
-app.use(cors({
-    origin: '*'
-}))
 
-
+// --------------->>>>>>>> Swagger <<<<<<<<-------------------
 const options = {
 	definition: {
 		openapi: "3.0.0",
@@ -50,6 +44,7 @@ const options = {
 		servers: [
 			{
 				url: "http://localhost:8080",
+				url: "https://dent-care-backend-aa29.onrender.com/"
 			},
 		],
 	},
@@ -58,12 +53,7 @@ const options = {
 
 const specs = swaggerJsDoc(options);
 
-
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
-
-
-
-
 
 
 
@@ -82,12 +72,11 @@ app.use("/doctors", doctorRouter);
 app.use("/services", serviceRouter);
 app.use("/appointments", appointmentRouter);
 app.use("/admin", adminRouter);
+app.use("/feedback", feedbackRouter);
 
 app.use(authenticate);
 app.use("/newtoken", GntRouter);
 app.use("/logout", LogoutRouter);
-app.use("/feedback", feedbackRouter);
-
 
 
 // --------------->>>>>>>> Server Running <<<<<<<<-------------------
